@@ -24,7 +24,7 @@ from sub_collab.negotiator import interface
 from sub_collab.peer import base
 from sub_collab import status_bar
 from twisted.words.protocols import irc
-from twisted.internet import reactor, protocol, error, defer
+from twisted.internet import ssl, reactor, protocol, error, defer
 import logging, sys, socket, functools
 import sublime
 
@@ -99,7 +99,8 @@ class IRCNegotiator(protocol.ClientFactory, irc.IRCClient):
         self.channel = kwargs['channel'].encode()
 
         status_bar.status_message('connecting to %s' % self.str())
-        self.clientConnection = reactor.connectTCP(self.host, self.port, self)
+        # self.clientConnection = reactor.connectTCP(self.host, self.port, self)
+        self.clientConnection = reactor.connectSSL(self.host, self.port, self, ssl.ClientContextFactory())
 
 
     def isConnected(self):
